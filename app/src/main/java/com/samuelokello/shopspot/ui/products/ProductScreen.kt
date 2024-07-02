@@ -1,15 +1,11 @@
-package com.samuelokello.shopspot.ui.home
+package com.samuelokello.shopspot.ui.products
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,12 +18,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.samuelokello.shopspot.R
 import com.samuelokello.shopspot.data.Product
+import com.samuelokello.shopspot.ui.navigation.bottom_navigation.BottomNavigationBar
 
 @Composable
-fun ProductScreen(viewModel: ProductViewModel) {
+fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
     val products by viewModel.products.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
@@ -53,6 +50,9 @@ fun ProductList(products: List<Product>) {
                 title = { Text(text = "ShopEZ") },
             )
         },
+        bottomBar = {
+//            BottomNavigationBar()
+        }
     ) { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),

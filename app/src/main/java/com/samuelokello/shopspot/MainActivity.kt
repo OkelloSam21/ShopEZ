@@ -6,8 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.samuelokello.shopspot.ui.home.ProductScreen
-import com.samuelokello.shopspot.ui.home.ProductViewModel
+import androidx.navigation.compose.rememberNavController
+import com.samuelokello.shopspot.ui.navigation.bottom_navigation.BottomNavigationBar
+import com.samuelokello.shopspot.ui.products.ProductScreen
+import com.samuelokello.shopspot.ui.products.ProductViewModel
 import com.samuelokello.shopspot.ui.theme.ShopSpotTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -18,8 +20,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             ShopSpotTheme {
-                ProductScreen(viewModel = viewModel)
+                BottomNavigationBar()
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.samuelokello.shopspot.ui.home
+package com.samuelokello.shopspot.ui.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
