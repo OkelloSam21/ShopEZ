@@ -25,7 +25,7 @@ Kotlin Coroutines
 ## Setup Instructions
 
 Clone the repository:
-Copygit clone https://github.com/yourusername/shopspot.git
+Copygit clone https://github.com/yourusername/ShopEZ.git
 
 Open the project in Android Studio Arctic Fox or later.
 Sync the project with Gradle files.
