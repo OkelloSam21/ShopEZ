@@ -3,7 +3,6 @@ package com.samuelokello.shopspot.ui.navigation.bottom_navigation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -20,12 +19,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.samuelokello.shopspot.repository.ProductRepository
+import com.samuelokello.shopspot.ui.OrderPlacedScreen
 import com.samuelokello.shopspot.ui.checkout.CheckoutScreen
 import com.samuelokello.shopspot.ui.navigation.Screens
 import com.samuelokello.shopspot.ui.products.ProductScreen
 import com.samuelokello.shopspot.ui.products.ProductViewModel
 import com.samuelokello.shopspot.ui.products.ProductViewModelFactory
-import com.samuelokello.shopspot.ui.theme.primaryContainerLight
 import com.samuelokello.shopspot.ui.theme.secondaryContainerLight
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -76,6 +75,9 @@ fun BottomNavigationBar() {
             composable(Screens.Checkout.route) {
                 // Checkout screen composable
                 CheckoutScreen(navController = navController, viewModel = viewModel)
+            }
+            composable("order_placed_screen") {
+                OrderPlacedScreen(navController = navController, viewModel = viewModel)
             }
         }
     }
