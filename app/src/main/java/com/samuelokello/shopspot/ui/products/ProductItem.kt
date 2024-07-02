@@ -10,23 +10,30 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.samuelokello.shopspot.R
 import com.samuelokello.shopspot.data.Product
+import com.samuelokello.shopspot.ui.theme.onPrimaryLight
+import com.samuelokello.shopspot.ui.theme.onSecondaryContainerLight
+import com.samuelokello.shopspot.ui.theme.primaryLight
+import com.samuelokello.shopspot.ui.theme.secondaryContainerLight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
 import java.net.URL
 
 @Composable
-fun ProductItem(product: Product) {
+fun ProductItem(product: Product, productViewModel: ProductViewModel) {
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var isLoading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
+    var isAddedToCart by remember { mutableStateOf(false) }
 
     LaunchedEffect(product.image) {
         isLoading = true
@@ -51,7 +58,11 @@ fun ProductItem(product: Product) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = secondaryContainerLight,
+            contentColor = onSecondaryContainerLight
+        )
     ) {
         Column(
             modifier = Modifier
@@ -94,10 +105,17 @@ fun ProductItem(product: Product) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                onClick = { /* Add to cart functionality */ },
+                onClick = {
+                    productViewModel.addToCart(product)
+                    isAddedToCart = true
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if(isAddedToCart) Color.Gray else primaryLight,
+                    contentColor = onPrimaryLight
+                ),
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text("Add to Cart")
+                Text(if (isAddedToCart)"Added to Cart" else "Add to Cart")
             }
         }
     }
