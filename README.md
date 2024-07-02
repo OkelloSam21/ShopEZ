@@ -9,8 +9,11 @@ ShopEZ is a simple, intuitive Android shopping app built with Jetpack Compose. I
 - Checkout process
 - Order confirmation
 
-Screenshots
-[Insert screenshots of your app here]
+## Screenshots
+<image src = "images/ScrrenShot_1.jpg" height = "350.px"> <image src = "images/ScreenShot_2.jpg" height = "350.px">
+<image src = "images/ScreenShot_3.jpg" height = "350.px">
+<image src = "images/ScreenShot_4.jpg" height = "350.px">
+<image src = "images/ScreenShot_5.jpg" height = "350.px">
 
 ## Technologies Used
 
