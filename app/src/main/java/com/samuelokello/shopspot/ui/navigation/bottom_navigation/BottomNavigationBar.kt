@@ -18,10 +18,13 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.gson.Gson
+import com.samuelokello.shopspot.data.Product
 import com.samuelokello.shopspot.repository.ProductRepository
-import com.samuelokello.shopspot.ui.OrderPlacedScreen
+import com.samuelokello.shopspot.ui.order.OrderPlacedScreen
 import com.samuelokello.shopspot.ui.checkout.CheckoutScreen
 import com.samuelokello.shopspot.ui.navigation.Screens
+import com.samuelokello.shopspot.ui.productdetails.ProductDetailsScreen
 import com.samuelokello.shopspot.ui.products.ProductScreen
 import com.samuelokello.shopspot.ui.products.ProductViewModel
 import com.samuelokello.shopspot.ui.products.ProductViewModelFactory
@@ -76,8 +79,13 @@ fun BottomNavigationBar() {
                 // Checkout screen composable
                 CheckoutScreen(navController = navController, viewModel = viewModel)
             }
-            composable("order_placed_screen") {
+            composable(Screens.OrderPlaced.route) {
                 OrderPlacedScreen(navController = navController, viewModel = viewModel)
+            }
+            composable(Screens.ProductDetailsScreen.route) { backStackEntry->
+                val productJson = backStackEntry.arguments?.getString("product")
+                val product = Gson().fromJson(productJson, Product::class.java)
+                ProductDetailsScreen(product = product)
             }
         }
     }

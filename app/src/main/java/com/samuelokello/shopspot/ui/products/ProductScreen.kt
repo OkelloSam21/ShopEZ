@@ -31,6 +31,9 @@ import com.samuelokello.shopspot.data.Product
 import com.samuelokello.shopspot.ui.navigation.bottom_navigation.BottomNavigationBar
 import com.samuelokello.shopspot.ui.theme.primaryLight
 
+/**
+ * @Product Screen - Lists all available products
+ */
 @Composable
 fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
     val products by viewModel.products.collectAsState()
@@ -43,15 +46,18 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
 
     when {
         isLoading -> LoadingIndicator()
-//        error != null -> ErrorMessage(error!!)
-        else -> ProductList(products, viewModel)
+        else -> ProductList(
+            products,
+            viewModel,
+            navController
+        )
     }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductList(products: List<Product>, viewModel: ProductViewModel) {
+fun ProductList(products: List<Product>, viewModel: ProductViewModel, navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -77,7 +83,11 @@ fun ProductList(products: List<Product>, viewModel: ProductViewModel) {
             modifier = Modifier.padding(innerPadding)
         ) {
             items(products) { product ->
-                ProductItem(product, productViewModel = viewModel)
+                ProductItem(
+                    product,
+                    productViewModel = viewModel,
+                    navController = navController
+                )
             }
         }
     }

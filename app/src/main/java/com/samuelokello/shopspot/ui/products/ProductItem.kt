@@ -3,6 +3,7 @@ package com.samuelokello.shopspot.ui.products
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -17,8 +18,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.google.gson.Gson
 import com.samuelokello.shopspot.R
 import com.samuelokello.shopspot.data.Product
+import com.samuelokello.shopspot.ui.navigation.Screens
 import com.samuelokello.shopspot.ui.theme.onPrimaryLight
 import com.samuelokello.shopspot.ui.theme.onSecondaryContainerLight
 import com.samuelokello.shopspot.ui.theme.primaryLight
@@ -29,7 +33,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 @Composable
-fun ProductItem(product: Product, productViewModel: ProductViewModel) {
+fun ProductItem(product: Product, productViewModel: ProductViewModel, navController: NavController) {
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var isLoading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -57,7 +61,11 @@ fun ProductItem(product: Product, productViewModel: ProductViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {
+                val productJson = Gson().toJson(product)
+                navController.navigate("product_details_screen?product=$productJson")
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = secondaryContainerLight,

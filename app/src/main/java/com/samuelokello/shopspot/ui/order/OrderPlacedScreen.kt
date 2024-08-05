@@ -1,4 +1,4 @@
-package com.samuelokello.shopspot.ui
+package com.samuelokello.shopspot.ui.order
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

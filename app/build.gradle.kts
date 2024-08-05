@@ -70,4 +70,7 @@ dependencies {
 
     //extended icons
     implementation(libs.androidx.material.icons.extended.android)
+
+    // GSON
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }
