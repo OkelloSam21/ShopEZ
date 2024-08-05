@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +36,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.samuelokello.shopspot.R
@@ -85,90 +83,92 @@ fun ProductDetailsScreen(product: Product) {
                 title = {
                     Text(
                         text = "Product Details",
+                        Modifier.padding(16.dp),
                         style = MaterialTheme.typography.titleLarge
                             .copy(
-                            color = primaryLight,
-                            fontSize = 36.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
+                                color = primaryLight,
+                                fontSize = 36.sp,
+                                fontWeight = FontWeight.Bold,
+                            ),
                     )
                 },
             )
         },
-    ) { innerPadding ->
+    ) { paddingValues ->
 
-        Column{
+        Column {
 
-           Box (
-               modifier = Modifier.weight(1f),
-               contentAlignment = Alignment.Center
-           ) {
-               Card(
-                   modifier = Modifier
-                       .fillMaxWidth()
-                       .padding(8.dp)
-                       .height(250.dp)
-                       .clip(RoundedCornerShape(10.dp)),
-                   elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
-                   colors = CardDefaults.cardColors(
-                       containerColor = secondaryContainerLight,
-                       contentColor = onSecondaryContainerLight
-                   )
-               ) {
-                   when {
-                       isLoading -> Box (Modifier.fillMaxSize()){
-                           CircularProgressIndicator(
-                               modifier = Modifier.align(Alignment.Center)
-                           )
-                       }
-                       error != null -> Box(Modifier.fillMaxSize()) {
-                           Icon(
-                               painter = painterResource(id = R.drawable.baseline_error_24),
-                               contentDescription = "Error",
-                               modifier = Modifier.align(Alignment.Center)
-                           )
-                       }
-                       bitmap != null -> Image(
-                           bitmap = bitmap!!.asImageBitmap(),
-                           contentDescription = product.title,
-                           contentScale = ContentScale.Crop,
-                           modifier = Modifier
-                               .fillMaxSize()
-                               .padding(8.dp)
-                       )
-                   }
-               }
-           }
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(250.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = secondaryContainerLight,
+                        contentColor = onSecondaryContainerLight
+                    )
+                ) {
+                    when {
+                        isLoading -> Box(Modifier.fillMaxSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+
+                        error != null -> Box(Modifier.fillMaxSize()) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_error_24),
+                                contentDescription = "Error",
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+
+                        bitmap != null -> Image(
+                            bitmap = bitmap!!.asImageBitmap(),
+                            contentDescription = product.title,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(8.dp)
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Box (Modifier.fillMaxWidth()){
-               Column(
-                   Modifier.padding(innerPadding),
-                   verticalArrangement = Arrangement.Top
-               ) {
-                   Text(
-                       text = product.title,
-                       style = MaterialTheme.typography.titleMedium
-                   )
-                   
-                   Spacer(modifier = Modifier.height(4.dp))
+            Box(Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                ) {
+                    Text(
+                        text = product.title,
+                        style = MaterialTheme.typography.titleMedium
+                    )
 
-                   Text(
-                       text = "$ ${product.price}",
-                       style = MaterialTheme.typography.bodyLarge,
-                       color = MaterialTheme.colorScheme.primary
-                   )
+                    Spacer(modifier = Modifier.height(4.dp))
 
-                   Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "$ ${product.price}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
 
-                   Text(
-                       text = product.description,
-                       fontSize = 12.sp,
-                       color = Color.Black,
-                       fontWeight = FontWeight.Light
-                   )
-               }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = product.description,
+                        fontSize = 12.sp,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Light
+                    )
+                }
             }
         }
     }
