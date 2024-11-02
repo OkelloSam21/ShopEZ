@@ -44,6 +44,28 @@ fun BottomNavigationBar() {
 
     val viewModel: ProductViewModel = viewModel(factory = factory)
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "ShopEZ",
+                        style = MaterialTheme.typography.titleLarge
+                            .copy(
+                                color = primaryLight,
+                                fontSize = 36.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                    )
+                },
+                actions = {
+                    IconButton(
+                        onClick = {navController.navigate(Screens.Checkout.route)}
+                    ) {
+                        Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
+                    }
+                }
+            )
+        },
         bottomBar = {
             NavigationBar(
                 containerColor = Color.Transparent
