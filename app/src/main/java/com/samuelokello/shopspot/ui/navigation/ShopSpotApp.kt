@@ -46,7 +46,7 @@ fun BottomNavigationBar() {
     Scaffold(
         bottomBar = {
             NavigationBar(
-                containerColor = secondaryContainerLight
+                containerColor = Color.Transparent
             ) {
                 BottomNavigationItem().bottomNavigationItems().forEachIndexed { index, item ->
                     NavigationBarItem(
@@ -62,6 +62,12 @@ fun BottomNavigationBar() {
                             }
                         },
                         icon = { Icon(item.icon, contentDescription = null) },
+                        modifier = Modifier,
+                        label = {
+                            Text(
+                                text = item.label
+                            )
+                        }
                     )
                 }
             }
