@@ -1,9 +1,10 @@
-package com.samuelokello.shopspot.ui.products
+package com.samuelokello.shopspot.ui.home
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.shopspot.data.Product
+import com.samuelokello.shopspot.network.ShopSpotApiService
 import com.samuelokello.shopspot.repository.ProductRepository
 import com.samuelokello.shopspot.ui.checkout.CartItem
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,8 +14,8 @@ import kotlinx.coroutines.launch
 /**
  * ViewModel
  */
-class ProductViewModel : ViewModel() {
-    private val repository = ProductRepository()
+class ProductViewModel (private val api: ShopSpotApiService): ViewModel() {
+    private val repository = ProductRepository(api)
 
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products = _products.asStateFlow()

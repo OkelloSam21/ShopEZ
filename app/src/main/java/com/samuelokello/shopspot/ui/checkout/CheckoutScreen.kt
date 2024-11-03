@@ -53,7 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.samuelokello.shopspot.R
 import com.samuelokello.shopspot.ui.navigation.Screens
-import com.samuelokello.shopspot.ui.products.ProductViewModel
+import com.samuelokello.shopspot.ui.home.ProductViewModel
 import com.samuelokello.shopspot.ui.theme.onPrimaryLight
 import com.samuelokello.shopspot.ui.theme.onSecondaryContainerLight
 import com.samuelokello.shopspot.ui.theme.primaryLight
