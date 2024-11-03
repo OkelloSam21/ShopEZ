@@ -1,11 +1,19 @@
-package com.samuelokello.shopspot.ui.navigation.bottom_navigation
+package com.samuelokello.shopspot.ui.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddShoppingCart
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -13,6 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -23,16 +34,20 @@ import com.samuelokello.shopspot.data.Product
 import com.samuelokello.shopspot.repository.ProductRepository
 import com.samuelokello.shopspot.ui.order.OrderPlacedScreen
 import com.samuelokello.shopspot.ui.checkout.CheckoutScreen
-import com.samuelokello.shopspot.ui.navigation.Screens
+import com.samuelokello.shopspot.ui.favourite.FavouriteScreen
+import com.samuelokello.shopspot.ui.navigation.bottom_navigation.BottomNavigationItem
 import com.samuelokello.shopspot.ui.productdetails.ProductDetailsScreen
-import com.samuelokello.shopspot.ui.products.ProductScreen
-import com.samuelokello.shopspot.ui.products.ProductViewModel
-import com.samuelokello.shopspot.ui.products.ProductViewModelFactory
-import com.samuelokello.shopspot.ui.theme.secondaryContainerLight
+import com.samuelokello.shopspot.ui.home.HomeScreen
+import com.samuelokello.shopspot.ui.home.ProductViewModel
+import com.samuelokello.shopspot.ui.home.ProductViewModelFactory
+import com.samuelokello.shopspot.ui.profile.ProfileScreen
+import com.samuelokello.shopspot.ui.search.SearchScreen
+import com.samuelokello.shopspot.ui.theme.primaryLight
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BottomNavigationBar() {
+fun ShopSpotApp() {
     var navigationSelectedItem by rememberSaveable { mutableIntStateOf(0) }
     val navController = rememberNavController()
 
@@ -40,7 +55,7 @@ fun BottomNavigationBar() {
     val productRepository = remember { ProductRepository() }
 
     // Create ViewModelFactory
-    val factory = remember { ProductViewModelFactory(productRepository) }
+    val factory = remember { ProductViewModelFactory() }
 
     val viewModel: ProductViewModel = viewModel(factory = factory)
     Scaffold(
@@ -61,7 +76,7 @@ fun BottomNavigationBar() {
                     IconButton(
                         onClick = {navController.navigate(Screens.Checkout.route)}
                     ) {
-                        Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
+                        Icon(Icons.Default.AddShoppingCart, contentDescription = "Cart")
                     }
                 }
             )
@@ -101,11 +116,25 @@ fun BottomNavigationBar() {
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(Screens.Products.route) {
-                ProductScreen(navController = navController, viewModel = viewModel)
+                HomeScreen(
+                    viewModel = viewModel,
+                    navigateToItemDetails = {
+                        navController.navigate("${Screens.ProductDetailsScreen} + /product")
+                    }
+                )
             }
             composable(Screens.Checkout.route) {
                 // Checkout screen composable
                 CheckoutScreen(navController = navController, viewModel = viewModel)
+            }
+            composable(Screens.Search.route) {
+                SearchScreen(modifier = Modifier)
+            }
+            composable(Screens.Favourite.route) {
+                FavouriteScreen(modifier = Modifier)
+            }
+            composable(Screens.Profile.route) {
+                ProfileScreen(modifier = Modifier)
             }
             composable(Screens.OrderPlaced.route) {
                 OrderPlacedScreen(navController = navController, viewModel = viewModel)
