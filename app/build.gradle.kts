@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
 }
 
 android {
@@ -72,5 +73,17 @@ dependencies {
     implementation(libs.androidx.material.icons.extended.android)
 
     // GSON
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.converter.gson)
+
+    // Kotlin serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // retrofit
+    implementation(libs.retrofit)
+    /// Retrofit with Kotlin serialization Converter
+
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.okhttp)
 }
