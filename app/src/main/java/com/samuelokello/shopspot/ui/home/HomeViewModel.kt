@@ -1,21 +1,31 @@
 package com.samuelokello.shopspot.ui.home
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.samuelokello.shopspot.ShopSpotApplication
 import com.samuelokello.shopspot.data.Product
-import com.samuelokello.shopspot.network.ShopSpotApiService
 import com.samuelokello.shopspot.repository.ProductRepository
 import com.samuelokello.shopspot.ui.checkout.CartItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okio.IOException
 
 /**
  * ViewModel
  */
-class ProductViewModel (private val api: ShopSpotApiService): ViewModel() {
-    private val repository = ProductRepository(api)
+class ProductViewModel(private val repository: ProductRepository) : ViewModel() {
+
+    var homeUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
+        private set
 
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products = _products.asStateFlow()
@@ -33,13 +43,21 @@ class ProductViewModel (private val api: ShopSpotApiService): ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
-            try {
-                _products.value = repository.getProducts()
-            } catch (e: Exception) {
-                _error.value = "Failed to load products: ${e.localizedMessage}"
-            } finally {
-                _isLoading.value = false
+
+            homeUiState = try {
+                val listResult = repository.getProducts()
+                HomeUiState.Success(products = listResult)
+            } catch (e: IOException){
+                HomeUiState.Error
             }
+//            try {
+//                _products.value = repository.getProducts()
+//                Log.e("ProductsViewModel", "$_products")
+//            } catch (e: Exception) {
+//                _error.value = "Failed to load products: ${e.localizedMessage}"
+//            } finally {
+//                _isLoading.value = false
+//            }
         }
     }
 
@@ -49,7 +67,10 @@ class ProductViewModel (private val api: ShopSpotApiService): ViewModel() {
             val existingItem = currentCart.find { it.product.id == product.id }
             if (existingItem != null) {
                 existingItem.quantity++
-                Log.d("ProductViewModel", "Increased quantity for ${product.title}. New quantity: ${existingItem.quantity}")
+                Log.d(
+                    "ProductViewModel",
+                    "Increased quantity for ${product.title}. New quantity: ${existingItem.quantity}"
+                )
             } else {
                 currentCart.add(CartItem(product))
                 Log.d("ProductViewModel", "Added new item to cart: ${product.title}")
@@ -66,9 +87,9 @@ class ProductViewModel (private val api: ShopSpotApiService): ViewModel() {
         }
     }
 
-    fun getCartItemCount(): Int {
-        return _cart.value.sumOf { it.quantity }
-    }
+//    fun getCartItemCount(): Int {
+//        return _cart.value.sumOf { it.quantity }
+//    }
 
     fun increaseQuantity(product: Product) {
         viewModelScope.launch {
@@ -107,4 +128,21 @@ class ProductViewModel (private val api: ShopSpotApiService): ViewModel() {
     fun clearCart() {
         _cart.value = emptyList()
     }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as ShopSpotApplication)
+                val productRepository = application.container.productRepository
+                ProductViewModel(repository = productRepository)
+            }
+
+        }
+    }
+}
+
+sealed interface HomeUiState {
+    data object Loading : HomeUiState
+    data object Error : HomeUiState
+    data class Success(val products:List<Product>) :HomeUiState
 }
