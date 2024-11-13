@@ -78,24 +78,7 @@ fun CheckoutScreen(
             Log.d("CheckoutScreen", "${item.product.title} - Quantity: ${item.quantity}")
         }
     }
-
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Checkout",
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            color = primaryLight,
-                            fontSize = 36.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
-                    )
-                },
-            )
-        },
-    ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
+        Column(modifier = Modifier.padding()) {
             if (cartItems.isEmpty()) {
                 EmptyCartMessage(navController)
             } else {
@@ -116,7 +99,7 @@ fun CheckoutScreen(
             }
         }
     }
-}
+
 
 @Composable
 fun CheckoutItem(
@@ -216,7 +199,7 @@ fun EmptyCartMessage(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                navController.navigate(Screens.Products.route)
+                navController.navigate(Screens.Home.route)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = primaryLight,

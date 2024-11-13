@@ -63,7 +63,7 @@ fun OrderPlacedScreen(navController: NavController, viewModel: ProductViewModel)
         Button(
             onClick = {
                 viewModel.clearCart() // Clear the cart
-                navController.navigate(Screens.Products.route) {
+                navController.navigate(Screens.Home.route) {
                     popUpTo(Screens.OrderPlaced.route) { inclusive = true }
                 }
             },
