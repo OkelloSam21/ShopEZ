@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ShopSpot</string>
+    <string name="loading_failed">Loading failed</string>
+    <string name="loading">loading</string>
 </resources>

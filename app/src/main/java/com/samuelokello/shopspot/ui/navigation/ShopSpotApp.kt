@@ -3,7 +3,6 @@ package com.samuelokello.shopspot.ui.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,7 +35,7 @@ fun ShopSpotApp() {
     val navController = rememberNavController()
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStack?.destination?.route
-    val topBarConfig = TopBarManager(currentRoute.toString(), navController)
+    val topBarConfig = topBarManager(currentRoute.toString(), navController)
 
     Scaffold(
         topBar = {

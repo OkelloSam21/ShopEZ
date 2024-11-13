@@ -26,13 +26,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,13 +44,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.samuelokello.shopspot.R
-import com.samuelokello.shopspot.ui.navigation.Screens
 import com.samuelokello.shopspot.ui.home.ProductViewModel
+import com.samuelokello.shopspot.ui.navigation.Screens
 import com.samuelokello.shopspot.ui.theme.onPrimaryLight
 import com.samuelokello.shopspot.ui.theme.onSecondaryContainerLight
 import com.samuelokello.shopspot.ui.theme.primaryLight
@@ -63,7 +58,6 @@ import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
 import java.net.URL
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckoutScreen(
     navController: NavController,

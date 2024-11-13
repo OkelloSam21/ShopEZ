@@ -11,7 +11,7 @@ import com.samuelokello.shopspot.data.TopBarType
 
 
 @Composable
-fun TopBarManager(currentRoute: String?, navController: NavController): TopBarConfig {
+fun topBarManager(currentRoute: String?, navController: NavController): TopBarConfig {
     return when (currentRoute) {
         Screens.Home.route -> TopBarConfig(
             title = "ShopEZ",

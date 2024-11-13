@@ -1,7 +1,6 @@
 package com.samuelokello.shopspot.ui.navigation
 
-import com.google.gson.Gson
-import com.samuelokello.shopspot.data.Product
+
 
 sealed class Screens (val route : String){
     data object Home : Screens("home")
