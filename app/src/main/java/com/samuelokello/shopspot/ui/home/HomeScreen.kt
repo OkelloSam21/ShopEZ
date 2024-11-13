@@ -1,31 +1,34 @@
 package com.samuelokello.shopspot.ui.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.samuelokello.shopspot.R
 import com.samuelokello.shopspot.data.Product
@@ -35,24 +38,27 @@ import com.samuelokello.shopspot.data.Product
  */
 @Composable
 fun HomeScreen(
+    state: HomeUiState,
     viewModel: ProductViewModel,
-    navigateToItemDetails: (product:Product) -> Unit
+    navigateToItemDetails: (product: Product) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    val products by viewModel.products.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val error by viewModel.error.collectAsState()
-
     LaunchedEffect(key1 = true) {
         viewModel.loadProducts()
     }
 
-    when {
-        isLoading -> LoadingIndicator()
-        else -> ProductList(
-            products = products,
-            viewModel = viewModel,
-            navigateToItemDetails = { navigateToItemDetails(it) }
-        )
+    when (state) {
+        HomeUiState.Error -> ErrorScreen()
+        HomeUiState.Loading -> LoadingScreen()
+        is HomeUiState.Success ->
+            ProductList(
+                products = state.products,
+                viewModel = viewModel,
+                navigateToItemDetails = { navigateToItemDetails(it) },
+                modifier = modifier.padding(top = contentPadding.calculateTopPadding())
+            )
+
     }
 }
 
@@ -60,28 +66,46 @@ fun HomeScreen(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ProductList(
+    modifier: Modifier = Modifier,
     products: List<Product>,
     viewModel: ProductViewModel,
-    navigateToItemDetails: (product:Product) -> Unit
+    navigateToItemDetails: (product: Product) -> Unit
 ) {
     Column {
+        val onActiveChange = {}
+        val colors1 = SearchBarDefaults.colors()
         SearchBar(
-            query = "",
-            onQueryChange = {},
-            onSearch = {},
-            active = false,
-            onActiveChange = {},
+            inputField = {
+                SearchBarDefaults.InputField(
+                    query = "",
+                    onQueryChange = {},
+                    onSearch = {},
+                    expanded = false,
+                    onExpandedChange = {},
+                    enabled = false,
+                    placeholder = {
+                        Text(text = "search")
+                    },
+                    leadingIcon = null,
+                    trailingIcon = {
+                        Icon(Icons.Default.Search, contentDescription = "search")
+                    },
+                    interactionSource = null,
+                )
+            },
+            expanded = false,
+            onExpandedChange = { onActiveChange() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
-            enabled = false,
-            placeholder = {
-                Text(text = "search")
+            shape = SearchBarDefaults.inputFieldShape,
+            colors = colors1,
+            tonalElevation = SearchBarDefaults.TonalElevation,
+            shadowElevation = SearchBarDefaults.ShadowElevation,
+            windowInsets = SearchBarDefaults.windowInsets,
+            content =  {
             },
-            trailingIcon = {
-                Icon(Icons.Default.Search, contentDescription = "search")
-            }
-        ) { }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -100,14 +124,31 @@ fun ProductList(
             }
         }
     }
-
-
 }
-
 
 @Composable
-fun LoadingIndicator() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
+fun LoadingScreen(modifier: Modifier = Modifier) {
+    Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+        Image(
+            modifier = modifier.size(200.dp),
+            painter = painterResource(R.drawable.loading_img),
+            contentDescription = stringResource(R.string.loading)
+        )
+    }
+
+}
+
+@Composable
+fun ErrorScreen(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_connection_error), contentDescription = ""
+        )
+        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
     }
 }
+

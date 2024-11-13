@@ -87,9 +87,6 @@ class ProductViewModel(private val repository: ProductRepository) : ViewModel() 
         }
     }
 
-//    fun getCartItemCount(): Int {
-//        return _cart.value.sumOf { it.quantity }
-//    }
 
     fun increaseQuantity(product: Product) {
         viewModelScope.launch {
@@ -139,6 +136,8 @@ class ProductViewModel(private val repository: ProductRepository) : ViewModel() 
 
         }
     }
+
+
 }
 
 sealed interface HomeUiState {
