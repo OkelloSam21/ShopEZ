@@ -1,13 +1,17 @@
 package com.samuelokello.shopspot.ui.navigation
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddShoppingCart
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.samuelokello.shopspot.data.TopBarConfig
-import com.samuelokello.shopspot.data.TopBarType
+import com.samuelokello.shopspot.ui.components.TopBarConfig
+import com.samuelokello.shopspot.ui.components.TopBarType
 
 
 @Composable
@@ -24,15 +28,35 @@ fun topBarManager(currentRoute: String?, navController: NavController): TopBarCo
         )
         Screens.Checkout.route -> TopBarConfig(
             title = "Checkout",
-            topBarType = TopBarType.Regular
+            topBarType = TopBarType.CenterAligned,
+            showBackIcon = true
         )
         Screens.Profile.route -> TopBarConfig(
-            title = "Profile",
-            topBarType = TopBarType.Regular
+            title = "",
+            topBarType = TopBarType.Regular,
         )
         "${Screens.ProductDetailsScreen.route}/{productJson}" -> TopBarConfig(
-            title = "Product Details",
-            topBarType = TopBarType.Regular
+            title = "",
+            topBarType = TopBarType.CenterAligned,
+            actions = {
+                IconButton(
+                    onClick = {
+
+                }, modifier = Modifier.padding( end= 10.dp)) {
+                    Icon(Icons.Outlined.Favorite, contentDescription = "Add to favourite")
+                }
+            },
+            showBackIcon = true
+        )
+        Screens.Search.route -> TopBarConfig(
+            title = "",
+            topBarType = TopBarType.CenterAligned,
+            showBackIcon = false,
+        )
+        Screens.Favourite.route -> TopBarConfig(
+            title = "",
+            topBarType = TopBarType.CenterAligned,
+            showBackIcon = false
         )
         else -> TopBarConfig(
             title = "ShopEZ",
