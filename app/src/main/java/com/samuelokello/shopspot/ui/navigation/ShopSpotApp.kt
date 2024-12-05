@@ -13,12 +13,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
-import com.samuelokello.shopspot.data.Product
+import com.samuelokello.shopspot.domain.Product
+import com.samuelokello.shopspot.ui.AppViewModelProvider
 import com.samuelokello.shopspot.ui.checkout.CheckoutScreen
 import com.samuelokello.shopspot.ui.components.ShopSpotTopAppBar
 import com.samuelokello.shopspot.ui.favourite.FavouriteScreen
 import com.samuelokello.shopspot.ui.home.HomeScreen
-import com.samuelokello.shopspot.ui.home.ProductViewModel
+import com.samuelokello.shopspot.ui.home.HomeViewModel
 import com.samuelokello.shopspot.ui.navigation.bottom_navigation.ShopSpotBottomNavigation
 import com.samuelokello.shopspot.ui.order.OrderPlacedScreen
 import com.samuelokello.shopspot.ui.productdetails.ProductDetailViewModel
@@ -29,7 +30,7 @@ import com.samuelokello.shopspot.ui.search.SearchScreen
 @Composable
 fun ShopSpotApp() {
 
-    val viewModel: ProductViewModel = viewModel(factory = ProductViewModel.Factory)
+    val viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val productDetailViewModel: ProductDetailViewModel = viewModel(factory = ProductDetailViewModel.Factory)
 
     val navController = rememberNavController()
@@ -39,7 +40,7 @@ fun ShopSpotApp() {
 
     Scaffold(
         topBar = {
-           ShopSpotTopAppBar(config = topBarConfig)
+           ShopSpotTopAppBar(config = topBarConfig, navController)
         },
         bottomBar = {
             if(currentRoute in setOf(
@@ -59,13 +60,12 @@ fun ShopSpotApp() {
         ) {
             composable(Screens.Home.route) {
                 HomeScreen(
-                    state = viewModel.homeUiState,
                     viewModel = viewModel,
                     navigateToItemDetails = { product ->
                         val productJson = Gson().toJson(product)
                         navController.navigate("${Screens.ProductDetailsScreen.route}/$productJson")
                     },
-                    contentPadding = innerPadding
+//                    contentPadding = innerPadding
                 )
             }
             composable(Screens.Checkout.route) {

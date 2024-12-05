@@ -8,6 +8,6 @@ class ShopSpotApplication : Application(){
     lateinit var container: ShopSpotContainer
     override fun onCreate() {
         super.onCreate()
-        container = DefaultAppContainer()
+        container = DefaultAppContainer(this)
     }
 }
