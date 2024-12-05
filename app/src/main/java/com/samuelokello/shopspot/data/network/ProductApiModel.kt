@@ -1,20 +1,20 @@
-package com.samuelokello.shopspot.data
+package com.samuelokello.shopspot.data.network
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Product(
+data class ProductApiModel(
     val id: Int,
     val title: String,
     val price: Double,
     val description: String,
     val category: String,
     val image: String,
-    val rating: Rating?
+    val rating: RatingApiModel?
 )
 
 @Serializable
-data class Rating(
+data class RatingApiModel(
     val rate: Double,
     val count: Int
 )

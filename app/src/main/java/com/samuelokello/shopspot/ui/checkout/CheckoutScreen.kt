@@ -47,7 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.samuelokello.shopspot.R
-import com.samuelokello.shopspot.ui.home.ProductViewModel
+import com.samuelokello.shopspot.ui.home.HomeViewModel
 import com.samuelokello.shopspot.ui.navigation.Screens
 import com.samuelokello.shopspot.ui.theme.onPrimaryLight
 import com.samuelokello.shopspot.ui.theme.onSecondaryContainerLight
@@ -61,37 +61,37 @@ import java.net.URL
 @Composable
 fun CheckoutScreen(
     navController: NavController,
-    viewModel: ProductViewModel,
+    viewModel: HomeViewModel,
 ) {
-    val cartItems by viewModel.cart.collectAsState()
-    val totalPrice = cartItems.sumOf { it.product.price * it.quantity }
-
-    LaunchedEffect(Unit) {
-        Log.d("CheckoutScreen", "Cart items: ${cartItems.size}")
-        cartItems.forEach { item ->
-            Log.d("CheckoutScreen", "${item.product.title} - Quantity: ${item.quantity}")
-        }
-    }
-        Column(modifier = Modifier.padding()) {
-            if (cartItems.isEmpty()) {
-                EmptyCartMessage(navController)
-            } else {
-                LazyColumn(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    items(cartItems) { cartItem ->
-                        CheckoutItem(
-                            cartItem = cartItem,
-                            onIncreaseQuantity = { viewModel.increaseQuantity(cartItem.product) },
-                            onDecreaseQuantity = { viewModel.decreaseQuantity(cartItem.product) },
-                            onRemoveItem = { viewModel.removeFromCart(cartItem.product) }
-                        )
-                    }
-                }
-                TotalPriceRow(totalPrice)
-                CheckoutButton(navController)
-            }
-        }
+//    val cartItems by viewModel.cart.collectAsState()
+//    val totalPrice = cartItems.sumOf { it.product.price * it.quantity }
+//
+//    LaunchedEffect(Unit) {
+//        Log.d("CheckoutScreen", "Cart items: ${cartItems.size}")
+//        cartItems.forEach { item ->
+//            Log.d("CheckoutScreen", "${item.product.title} - Quantity: ${item.quantity}")
+//        }
+//    }
+//        Column(modifier = Modifier.padding()) {
+//            if (cartItems.isEmpty()) {
+//                EmptyCartMessage(navController)
+//            } else {
+//                LazyColumn(
+//                    modifier = Modifier.weight(1f)
+//                ) {
+//                    items(cartItems) { cartItem ->
+//                        CheckoutItem(
+//                            cartItem = cartItem,
+//                            onIncreaseQuantity = { viewModel.increaseQuantity(cartItem.product) },
+//                            onDecreaseQuantity = { viewModel.decreaseQuantity(cartItem.product) },
+//                            onRemoveItem = { viewModel.removeFromCart(cartItem.product) }
+//                        )
+//                    }
+//                }
+//                TotalPriceRow(totalPrice)
+//                CheckoutButton(navController)
+//            }
+//        }
     }
 
 

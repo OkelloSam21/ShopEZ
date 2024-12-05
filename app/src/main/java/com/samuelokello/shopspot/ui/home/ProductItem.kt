@@ -1,69 +1,37 @@
 package com.samuelokello.shopspot.ui.home
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.google.gson.Gson
-import com.samuelokello.shopspot.R
-import com.samuelokello.shopspot.data.Product
-import com.samuelokello.shopspot.ui.theme.onPrimaryLight
-import com.samuelokello.shopspot.ui.theme.primaryLight
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
+import coil.compose.AsyncImage
+import com.samuelokello.shopspot.domain.Product
 
 @Composable
 fun ProductItem(
     product: Product,
-    productViewModel: ProductViewModel,
-    navigateToItemDetails: (product:Product) -> Unit,
+    navigateToItemDetails: (product: Product) -> Unit,
 ) {
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var error by remember { mutableStateOf<String?>(null) }
-    var isAddedToCart by remember { mutableStateOf(false) }
-
-    LaunchedEffect(product.image) {
-        isLoading = true
-        error = null
-        try {
-            val loadedBitmap = withContext(Dispatchers.IO) {
-                val connection = URL(product.image).openConnection() as HttpURLConnection
-                connection.doInput = true
-                connection.connect()
-                val inputStream = connection.inputStream
-                BitmapFactory.decodeStream(inputStream)
-            }
-            bitmap = loadedBitmap
-        } catch (e: Exception) {
-            error = e.message
-        } finally {
-            isLoading = false
-        }
-    }
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-//                val productJson = Gson().toJson(product)
-//                navController.navigate("product_details_screen?product=$productJson")
                 navigateToItemDetails(product)
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -81,22 +49,14 @@ fun ProductItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(8.dp)),
+                contentAlignment = Alignment.Center
             ) {
-                when {
-                    isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    error != null -> Icon(
-                        painter = painterResource(id = R.drawable.baseline_error_24),
-                        contentDescription = "Error",
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                    bitmap != null -> Image(
-                        bitmap = bitmap!!.asImageBitmap(),
-                        contentDescription = product.title,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+               AsyncImage(
+                   model = product.image,
+                   contentDescription = "",
+                   contentScale = ContentScale.Fit
+               )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -111,20 +71,6 @@ fun ProductItem(
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
-                onClick = {
-                    productViewModel.addToCart(product)
-                    isAddedToCart = true
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if(isAddedToCart) Color.Gray else primaryLight,
-                    contentColor = onPrimaryLight
-                ),
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text(if (isAddedToCart)"Added to Cart" else "Add to Cart")
-            }
         }
     }
 }

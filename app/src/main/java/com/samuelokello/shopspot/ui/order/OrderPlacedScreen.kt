@@ -22,12 +22,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.samuelokello.shopspot.ui.navigation.Screens
-import com.samuelokello.shopspot.ui.home.ProductViewModel
+import com.samuelokello.shopspot.ui.home.HomeViewModel
 import com.samuelokello.shopspot.ui.theme.onPrimaryLight
 import com.samuelokello.shopspot.ui.theme.primaryLight
 
 @Composable
-fun OrderPlacedScreen(navController: NavController, viewModel: ProductViewModel) {
+fun OrderPlacedScreen(navController: NavController, viewModel: HomeViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,7 +62,7 @@ fun OrderPlacedScreen(navController: NavController, viewModel: ProductViewModel)
         
         Button(
             onClick = {
-                viewModel.clearCart() // Clear the cart
+//                viewModel.clearCart() // Clear the cart
                 navController.navigate(Screens.Home.route) {
                     popUpTo(Screens.OrderPlaced.route) { inclusive = true }
                 }
