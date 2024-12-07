@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,18 +22,19 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.samuelokello.shopspot.R
 import com.samuelokello.shopspot.domain.Product
+import com.samuelokello.shopspot.ui.AppViewModelProvider
 
 /**
  * @Product Screen - Lists all available products
  */
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
-    navigateToItemDetails: (product: Product) -> Unit,
     modifier: Modifier = Modifier,
-//    contentPadding: PaddingValues = PaddingValues(0.dp)
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToItemDetails: (product: Product) -> Unit,
 ) {
     val state by viewModel.homeUiState.collectAsState()
 
@@ -45,9 +45,7 @@ fun HomeScreen(
             ProductList(
                 products = (state as HomeUiState.Success).products,
                 navigateToItemDetails = { navigateToItemDetails(it) },
-//                modifier = modifier.padding(top = contentPadding.calculateTopPadding())
             )
-
     }
 }
 
