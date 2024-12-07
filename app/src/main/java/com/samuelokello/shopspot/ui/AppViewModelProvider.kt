@@ -6,11 +6,17 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelokello.shopspot.ShopSpotApplication
 import com.samuelokello.shopspot.ui.home.HomeViewModel
+import com.samuelokello.shopspot.ui.search.SearchViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             HomeViewModel(
+                repository = shopSpotApplication().container.productRepository
+            )
+        }
+        initializer {
+            SearchViewModel(
                 repository = shopSpotApplication().container.productRepository
             )
         }

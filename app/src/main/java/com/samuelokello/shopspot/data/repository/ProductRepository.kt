@@ -12,6 +12,15 @@ import kotlinx.coroutines.flow.onStart
 
 interface ProductRepository{
     fun getProducts(): Flow<List<Product>>
+    fun searchProductsWithFilters(
+        query: String,
+        minPrice: Double?,
+        maxPrice: Double?,
+        category: String?,
+        minCount: Int?,
+        minRating: Double?
+
+    ): Flow<List<Product>>
 }
 class ProductRepositoryImpl(
     private val shopSpotApiService: ShopSpotApiService,
@@ -43,5 +52,19 @@ class ProductRepositoryImpl(
 
             }
 
+    }
+
+    override fun searchProductsWithFilters(
+        query: String,
+        minPrice: Double?,
+        maxPrice: Double?,
+        category: String?,
+        minCount: Int?,
+        minRating: Double?
+    ): Flow<List<Product>> {
+        return productDao.searchProductsWithFilters(query = query, minPrice = minPrice,maxPrice = maxPrice, category = category, minCount =  minCount, minRate = minRating)
+            .map { entities ->
+                entities.map {productEntityMapper.toDomain(it)}
+            }
     }
 }
