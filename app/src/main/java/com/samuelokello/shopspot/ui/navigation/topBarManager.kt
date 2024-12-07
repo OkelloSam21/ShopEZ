@@ -48,18 +48,18 @@ fun topBarManager(currentRoute: String?, navController: NavController): TopBarCo
             },
             showBackIcon = true
         )
-        Screens.Search.route -> TopBarConfig(
-            title = "",
-            topBarType = TopBarType.CenterAligned,
-            showBackIcon = false,
-        )
+//        Screens.Search.route -> TopBarConfig(
+//            title = "",
+//            topBarType = TopBarType.CenterAligned,
+//            showBackIcon = false,
+//        )
         Screens.Favourite.route -> TopBarConfig(
             title = "",
             topBarType = TopBarType.CenterAligned,
             showBackIcon = false
         )
         else -> TopBarConfig(
-            title = "ShopEZ",
+            title = "",
             topBarType = TopBarType.Regular
         )
     }

@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 
 sealed class TopBarType {
-    object CenterAligned : TopBarType()
-    object Regular : TopBarType()
+    data object CenterAligned : TopBarType()
+    data object Regular : TopBarType()
 }
 
 data class TopBarConfig(

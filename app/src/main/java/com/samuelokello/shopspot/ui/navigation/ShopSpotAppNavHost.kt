@@ -60,19 +60,23 @@ fun ShopSpotApp() {
         ) {
             composable(Screens.Home.route) {
                 HomeScreen(
-                    viewModel = viewModel,
                     navigateToItemDetails = { product ->
                         val productJson = Gson().toJson(product)
                         navController.navigate("${Screens.ProductDetailsScreen.route}/$productJson")
                     },
-//                    contentPadding = innerPadding
                 )
             }
             composable(Screens.Checkout.route) {
                 CheckoutScreen(navController = navController, viewModel = viewModel)
             }
             composable(Screens.Search.route) {
-                SearchScreen(modifier = Modifier)
+                SearchScreen(
+                    modifier = Modifier,
+                    navigateToItemDetails = {product ->
+                        val productJson = Gson().toJson(product)
+                        navController.navigate("${Screens.ProductDetailsScreen.route}/$productJson")
+                    }
+                )
             }
             composable(Screens.Favourite.route) {
                 FavouriteScreen(modifier = Modifier)
