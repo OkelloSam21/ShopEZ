@@ -56,26 +56,23 @@ class SearchViewModel(private val repository: ProductRepository) : ViewModel() {
             return
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _searchUiState.value = SearchUiState.Loading
-
-            repository.searchProductsWithFilters(
-                query = query,
-                minPrice = minPrice,
-                maxPrice = maxPrice,
-                category = category,
-                minCount = minCount,
-                minRating = minRating
-            )
-                .onStart {
-                    _searchUiState.value = SearchUiState.Loading
-                }
-                .catch {
-                    _searchUiState.value = SearchUiState.Error("Error occurred")
-                }
-                .collect { products ->
-                    _searchUiState.value = SearchUiState.Success(products = products)
-                }
+            try {
+                repository.searchProductsWithFilters(
+                    query = query,
+                    minPrice = minPrice,
+                    maxPrice = maxPrice,
+                    category = category,
+                    minCount = minCount,
+                    minRating = minRating
+                )
+                    .collect { products ->
+                        _searchUiState.value = SearchUiState.Success(products)
+                    }
+            } catch (e: Exception) {
+                _searchUiState.value = SearchUiState.Error("Error occurred")
+            }
         }
     }
 }

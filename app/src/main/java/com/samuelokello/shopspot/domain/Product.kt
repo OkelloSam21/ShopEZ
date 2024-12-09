@@ -8,5 +8,6 @@ data class Product(
     val category: String,
     val image: String,
     val rating: Double,
-    val count: Int
+    val count: Int,
+    val isFavourite: Boolean? = false
 )

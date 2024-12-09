@@ -44,6 +44,17 @@ class ProductViewModelTest {
             override fun getProducts(): Flow<List<Product>> = flow {
                 throw Exception("Network Error")
             }
+
+            override fun searchProductsWithFilters(
+                query: String,
+                minPrice: Double?,
+                maxPrice: Double?,
+                category: String?,
+                minCount: Int?,
+                minRating: Double?
+            ): Flow<List<Product>> {
+                TODO("Not yet implemented")
+            }
         }
         val homeViewModel = HomeViewModel(repository = errorRepository)
 

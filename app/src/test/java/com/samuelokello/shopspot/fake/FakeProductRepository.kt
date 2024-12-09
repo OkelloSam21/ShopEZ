@@ -5,7 +5,16 @@ import com.samuelokello.shopspot.domain.Product
 import kotlinx.coroutines.flow.Flow
 
 class FakeProductRepository: ProductRepository {
-    override fun getProducts(): Flow<List<Product>> {
-      return FakeDataSource.fakeProductsList
-    }
+    override fun getProducts(): Flow<List<Product>> = FakeDataSource.fakeProductsList
+
+
+    override fun searchProductsWithFilters(
+        query: String,
+        minPrice: Double?,
+        maxPrice: Double?,
+        category: String?,
+        minCount: Int?,
+        minRating: Double?
+    ): Flow<List<Product>> = FakeDataSource.fakeProductsList
+
 }
