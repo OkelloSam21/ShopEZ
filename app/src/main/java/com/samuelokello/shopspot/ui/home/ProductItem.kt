@@ -25,14 +25,14 @@ import com.samuelokello.shopspot.domain.Product
 @Composable
 fun ProductItem(
     product: Product,
-    navigateToItemDetails: (product: Product) -> Unit,
+    navigateToItemDetails: (productId: Int) -> Unit,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                navigateToItemDetails(product)
+                navigateToItemDetails(product.id)
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(

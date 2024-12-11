@@ -26,17 +26,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.samuelokello.shopspot.domain.Product
+import com.samuelokello.shopspot.ui.AppViewModelProvider
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ProductDetailsScreen(viewModel:ProductDetailViewModel,product: Product) {
+fun ProductDetailsScreen(
+    viewModel:ProductDetailViewModel = viewModel(factory= AppViewModelProvider.Factory),
+    productId: Int
+) {
 
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadProduct(product)
+        viewModel.getProductById(productId)
     }
 
 
