@@ -22,17 +22,13 @@ import com.samuelokello.shopspot.ui.home.HomeScreen
 import com.samuelokello.shopspot.ui.home.HomeViewModel
 import com.samuelokello.shopspot.ui.navigation.bottom_navigation.ShopSpotBottomNavigation
 import com.samuelokello.shopspot.ui.order.OrderPlacedScreen
-import com.samuelokello.shopspot.ui.productdetails.ProductDetailViewModel
 import com.samuelokello.shopspot.ui.productdetails.ProductDetailsScreen
 import com.samuelokello.shopspot.ui.profile.ProfileScreen
 import com.samuelokello.shopspot.ui.search.SearchScreen
 
 @Composable
-fun ShopSpotApp() {
-
+fun ShopSpotAppNavHost() {
     val viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
-    val productDetailViewModel: ProductDetailViewModel = viewModel(factory = ProductDetailViewModel.Factory)
-
     val navController = rememberNavController()
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStack?.destination?.route
@@ -40,10 +36,10 @@ fun ShopSpotApp() {
 
     Scaffold(
         topBar = {
-           ShopSpotTopAppBar(config = topBarConfig, navController)
+            ShopSpotTopAppBar(config = topBarConfig, navController)
         },
         bottomBar = {
-            if(currentRoute in setOf(
+            if (currentRoute in setOf(
                     Screens.Home.route,
                     Screens.Profile.route,
                     Screens.Favourite.route,
@@ -51,19 +47,18 @@ fun ShopSpotApp() {
                 )) {
                 ShopSpotBottomNavigation(navController)
             }
-        },
+        }
     ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = Screens.Home.route,
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screens.Home.route) {
                 HomeScreen(
-                    navigateToItemDetails = { product ->
-                        val productJson = Gson().toJson(product)
-                        navController.navigate("${Screens.ProductDetailsScreen.route}/$productJson")
-                    },
+                    navigateToItemDetails = { productId ->
+                        navController.navigate("${Screens.ProductDetailsScreen.route}/$productId")
+                    }
                 )
             }
             composable(Screens.Checkout.route) {
@@ -72,9 +67,8 @@ fun ShopSpotApp() {
             composable(Screens.Search.route) {
                 SearchScreen(
                     modifier = Modifier,
-                    navigateToItemDetails = {product ->
-                        val productJson = Gson().toJson(product)
-                        navController.navigate("${Screens.ProductDetailsScreen.route}/$productJson")
+                    navigateToItemDetails = { product ->
+                        navController.navigate("${Screens.ProductDetailsScreen.route}/${product.id}")
                     }
                 )
             }
@@ -88,12 +82,13 @@ fun ShopSpotApp() {
                 OrderPlacedScreen(navController = navController, viewModel = viewModel)
             }
             composable(
-                route = "${Screens.ProductDetailsScreen.route}/{productJson}",
-                arguments = listOf(navArgument("productJson"){type = NavType.StringType})
-            ) { backStackEntry->
-                val productJson = backStackEntry.arguments?.getString("productJson")
-                val product = Gson().fromJson(productJson, Product::class.java)
-                ProductDetailsScreen(product = product, viewModel =  productDetailViewModel)
+                route = "${Screens.ProductDetailsScreen.route}/{productId}",
+                arguments = listOf(navArgument("productId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val productId = backStackEntry.arguments?.getInt("productId")
+                if (productId != null) {
+                    ProductDetailsScreen(productId = productId)
+                }
             }
         }
     }
