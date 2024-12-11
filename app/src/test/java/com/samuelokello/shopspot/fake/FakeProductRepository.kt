@@ -17,4 +17,8 @@ class FakeProductRepository: ProductRepository {
         minRating: Double?
     ): Flow<List<Product>> = FakeDataSource.fakeProductsList
 
+    override fun getProductById(id: Int): Product {
+        TODO("Not yet implemented")
+    }
+
 }

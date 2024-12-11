@@ -14,6 +14,9 @@ interface ProductDao {
     @Query("SELECT * FROM products")
     fun  getProducts(): Flow<List<ProductEntity>>
 
+    @Query("SELECT * FROM products WHERE :id == id" )
+    fun getProductById(id: Int): ProductEntity
+
     @Query("""
         SELECT * FROM products
         WHERE (:query IS NULL OR title LIKE '%' || :query || '%')

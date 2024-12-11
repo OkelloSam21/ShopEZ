@@ -55,6 +55,10 @@ class ProductViewModelTest {
             ): Flow<List<Product>> {
                 TODO("Not yet implemented")
             }
+
+            override fun getProductById(id: Int): Product {
+                TODO("Not yet implemented")
+            }
         }
         val homeViewModel = HomeViewModel(repository = errorRepository)
 

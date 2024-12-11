@@ -114,6 +114,16 @@ class ProductDaoTest {
         assertTrue(searchResults3.contains(product2))
     }
 
+    @Test
+    @Throws(IOException::class)
+    fun productDaoGetProductById_returnSingleProductMatchingId() = runBlocking {
+        addItemsToDB()
+
+        val product = productDao.getProductById(1)
+
+        assertEquals(product,product1)
+    }
+
 
 
     private suspend fun addItemsToDB() {

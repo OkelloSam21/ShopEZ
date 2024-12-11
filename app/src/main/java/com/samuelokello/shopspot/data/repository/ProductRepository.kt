@@ -5,6 +5,7 @@ import com.samuelokello.shopspot.data.mapper.ProductApiMapper
 import com.samuelokello.shopspot.data.mapper.ProductEntityMapper
 import com.samuelokello.shopspot.data.network.ShopSpotApiService
 import com.samuelokello.shopspot.domain.Product
+import com.samuelokello.shopspot.domain.mappers.toDomainModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -21,6 +22,8 @@ interface ProductRepository{
         minRating: Double?
 
     ): Flow<List<Product>>
+
+    fun getProductById(id:Int):Product
 }
 class ProductRepositoryImpl(
     private val shopSpotApiService: ShopSpotApiService,
@@ -66,5 +69,9 @@ class ProductRepositoryImpl(
             .map { entities ->
                 entities.map {productEntityMapper.toDomain(it)}
             }
+    }
+
+    override fun getProductById(id: Int): Product {
+       return productDao.getProductById(id).toDomainModel()
     }
 }
