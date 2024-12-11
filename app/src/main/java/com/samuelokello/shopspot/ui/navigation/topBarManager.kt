@@ -3,6 +3,7 @@ package com.samuelokello.shopspot.ui.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddShoppingCart
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,7 +44,14 @@ fun topBarManager(currentRoute: String?, navController: NavController): TopBarCo
                     onClick = {
 
                 }, modifier = Modifier.padding( end= 10.dp)) {
-                    Icon(Icons.Outlined.Favorite, contentDescription = "Add to favourite")
+
+                    IconButton(
+                        onClick = {
+
+                        }
+                    ){
+                        Icon(Icons.Default.FavoriteBorder, contentDescription = "Add to favourite")
+                    }
                 }
             },
             showBackIcon = true

@@ -32,9 +32,8 @@ import com.samuelokello.shopspot.ui.AppViewModelProvider
  */
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navigateToItemDetails: (product: Product) -> Unit,
+    navigateToItemDetails: (productId: Int) -> Unit,
 ) {
     val state by viewModel.homeUiState.collectAsState()
 
@@ -54,7 +53,7 @@ fun HomeScreen(
 fun ProductList(
     modifier: Modifier = Modifier,
     products: List<Product>,
-    navigateToItemDetails: (product: Product) -> Unit
+    navigateToItemDetails: (productId: Int) -> Unit
 ) {
     Column {
       LazyVerticalGrid(
@@ -66,7 +65,7 @@ fun ProductList(
             items(products) { product ->
                 ProductItem(
                     product,
-                    navigateToItemDetails = { navigateToItemDetails(product) }
+                    navigateToItemDetails = { navigateToItemDetails(product.id) }
                 )
             }
         }

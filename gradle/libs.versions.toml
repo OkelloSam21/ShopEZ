@@ -18,7 +18,6 @@ okhttp = "4.12.0"
 retrofit = "2.9.0"
 retrofit2KotlinxSerializationConverter = "1.0.0"
 roomCompiler = "2.6.1"
-junitJunit = "4.12"
 junitKtx = "1.2.1"
 
 [libraries]
