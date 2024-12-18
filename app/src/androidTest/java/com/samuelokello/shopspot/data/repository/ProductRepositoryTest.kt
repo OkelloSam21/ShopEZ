@@ -2,16 +2,14 @@ package com.samuelokello.shopspot.data.repository
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.samuelokello.shopspot.data.FakeDataSource
-import com.samuelokello.shopspot.data.FakeShopSpotApiService
-import com.samuelokello.shopspot.data.local.ProductDao
-import com.samuelokello.shopspot.data.local.SHopSpotDatabase
+import com.samuelokello.shopspot.data.FakeProductApiService
+import com.samuelokello.shopspot.data.local.product.ProductDao
+import com.samuelokello.shopspot.data.local.ShopSpotDatabase
 import com.samuelokello.shopspot.data.mapper.ProductApiMapper
 import com.samuelokello.shopspot.data.mapper.ProductEntityMapper
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
@@ -19,8 +17,8 @@ import org.junit.Test
 class ProductRepositoryImplTest {
 
     private lateinit var productDao: ProductDao
-    private lateinit var shopSpotDatabase: SHopSpotDatabase
-    private val fakeApiService = FakeShopSpotApiService()
+    private lateinit var shopSpotDatabase: ShopSpotDatabase
+    private val fakeApiService = FakeProductApiService()
     private lateinit var repository: ProductRepositoryImpl
 
     private val productApiMapper = ProductApiMapper()
@@ -29,13 +27,13 @@ class ProductRepositoryImplTest {
     @Before
     fun setup() {
         val context: Context = ApplicationProvider.getApplicationContext()
-        shopSpotDatabase = Room.inMemoryDatabaseBuilder(context, SHopSpotDatabase::class.java)
+        shopSpotDatabase = Room.inMemoryDatabaseBuilder(context, ShopSpotDatabase::class.java)
             .allowMainThreadQueries()
             .build()
         productDao = shopSpotDatabase.productDao()
 
         repository = ProductRepositoryImpl(
-            shopSpotApiService = fakeApiService,
+            productApiService = fakeApiService,
             productDao = productDao,
             productApiMapper = productApiMapper,
             productEntityMapper = productEntityMapper

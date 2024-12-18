@@ -1,9 +1,9 @@
 package com.samuelokello.shopspot.data.repository
 
-import com.samuelokello.shopspot.data.local.ProductDao
+import com.samuelokello.shopspot.data.local.product.ProductDao
 import com.samuelokello.shopspot.data.mapper.ProductApiMapper
 import com.samuelokello.shopspot.data.mapper.ProductEntityMapper
-import com.samuelokello.shopspot.data.network.ShopSpotApiService
+import com.samuelokello.shopspot.data.network.product.ProductApiService
 import com.samuelokello.shopspot.domain.Product
 import com.samuelokello.shopspot.domain.mappers.toDomainModel
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +26,7 @@ interface ProductRepository{
     fun getProductById(id:Int):Product
 }
 class ProductRepositoryImpl(
-    private val shopSpotApiService: ShopSpotApiService,
+    private val productApiService: ProductApiService,
     private val productDao: ProductDao,
     private val productApiMapper: ProductApiMapper,
     private val productEntityMapper: ProductEntityMapper
@@ -39,7 +39,7 @@ class ProductRepositoryImpl(
             .onStart {
                 try {
                     if (productDao.getProducts().firstOrNull()?.isEmpty() == true){
-                        val apiProducts = shopSpotApiService.getProducts()
+                        val apiProducts = productApiService.getProducts()
 
                         val productEntities = apiProducts.map {
                             productApiMapper.toDomain(it)

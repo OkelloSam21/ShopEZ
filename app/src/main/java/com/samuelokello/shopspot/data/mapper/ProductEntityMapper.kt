@@ -1,6 +1,6 @@
 package com.samuelokello.shopspot.data.mapper
 
-import com.samuelokello.shopspot.data.local.ProductEntity
+import com.samuelokello.shopspot.data.local.product.ProductEntity
 import com.samuelokello.shopspot.domain.Product
 
 class ProductEntityMapper {

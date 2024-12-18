@@ -145,3 +145,8 @@ fun ProductDetail(modifier: Modifier = Modifier, state: ProductDetailUiState) {
     }
 }
 
+@Composable
+private fun IncreaseItem(){
+    
+}
+

@@ -3,6 +3,7 @@ package com.samuelokello.shopspot.ui.productdetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.shopspot.data.repository.ProductRepository
+import com.samuelokello.shopspot.data.repository.CartRepository
 import com.samuelokello.shopspot.domain.Product
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ProductDetailViewModel(private val repository: ProductRepository): ViewModel () {
+class ProductDetailViewModel(
+    private val repository: ProductRepository,
+    private val cartRepository: CartRepository
+): ViewModel () {
     private val _state = MutableStateFlow<ProductDetailUiState>(ProductDetailUiState.Loading)
     val state = _state.asStateFlow()
 
@@ -30,7 +34,16 @@ class ProductDetailViewModel(private val repository: ProductRepository): ViewMod
 
     fun addToCart(product: Product) {
         viewModelScope.launch {
+            try {
+                cartRepository.addItemToCart(
+                    userId = 1,
+                    productId = product.id,
+                    quantity = 1
 
+                )
+            }catch (e: Exception){
+
+            }
         }
     }
 }
