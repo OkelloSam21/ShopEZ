@@ -1,17 +1,17 @@
 package com.samuelokello.shopspot.fake
 
-import com.samuelokello.shopspot.data.network.ProductApiModel
-import com.samuelokello.shopspot.data.network.RatingApiModel
+import com.samuelokello.shopspot.data.network.product.dto.ProductDto
+import com.samuelokello.shopspot.data.network.product.dto.RatingDto
 import com.samuelokello.shopspot.domain.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-val rating = RatingApiModel(4.0,234)
+val rating = RatingDto(4.0,234)
 
 object FakeDataSource {
     val productApiList =
         listOf(
-            ProductApiModel(
+            ProductDto(
                 id = 1,
                 title = "item1",
                 price = 30.00,
@@ -20,7 +20,7 @@ object FakeDataSource {
                 image = "img1",
                 rating = rating
             ),
-            ProductApiModel(
+            ProductDto(
                 id = 2,
                 title = "item2",
                 price = 30.00,
@@ -29,7 +29,7 @@ object FakeDataSource {
                 image = "img2",
                 rating = rating
             ),
-            ProductApiModel(
+            ProductDto(
                 id = 3,
                 title = "item2",
                 price = 330.00,

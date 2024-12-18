@@ -15,29 +15,21 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 
 @Composable
-fun ShopSpotBottomNavigation(navController: NavController) {
-    var navigationSelectedItem by rememberSaveable { mutableIntStateOf(0) }
-
+fun ShopSpotBottomNavigation(
+    selectedIndex: Int,
+    onNavigate: (Int, String) -> Unit
+) {
     NavigationBar(containerColor = Color.Transparent) {
         BottomNavigationItem().bottomNavigationItems().forEachIndexed { index, item ->
             NavigationBarItem(
-                selected = index == navigationSelectedItem,
+                selected = index == selectedIndex,
                 onClick = {
-                    navigationSelectedItem = index
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    onNavigate(index, item.route)
                 },
                 icon = { Icon(item.icon, contentDescription = null) },
                 modifier = Modifier,
                 label = {
-                    Text(
-                        text = item.label
-                    )
+                    Text(text = item.label)
                 }
             )
         }

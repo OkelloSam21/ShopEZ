@@ -17,13 +17,13 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShopSpotTopAppBar(config: TopBarConfig, navController: NavController) {
+fun ShopSpotTopAppBar(config: TopBarConfig, onBackClick:() -> Unit) {
     when (config.topBarType) {
         TopBarType.CenterAligned -> {
             CenterAlignedTopAppBar(
                 title = { Text(config.title, style = appBarTextStyle) },
                 navigationIcon = {if (config.showBackIcon){
-                    IconButton(onClick = { navController.popBackStack()}) {
+                    IconButton(onClick = onBackClick) {
                         Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Back")
                     }
                 }
@@ -46,3 +46,4 @@ val appBarTextStyle
         fontSize = 36.sp,
         fontWeight = FontWeight.Bold
     )
+
