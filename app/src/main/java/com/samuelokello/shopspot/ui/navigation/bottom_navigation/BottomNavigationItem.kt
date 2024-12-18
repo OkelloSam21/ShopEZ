@@ -15,7 +15,7 @@ data class BottomNavigationItem(
         return listOf(
             BottomNavigationItem("Home",Icons.Default.Home, Screens.Home.route),
             BottomNavigationItem("Search",Icons.Filled.Search, Screens.Search.route),
-            BottomNavigationItem("Favourite",Icons.Rounded.Favorite, Screens.Favourite.route),
+//            BottomNavigationItem("Favourite",Icons.Rounded.Favorite, Screens.Favourite.route),
             BottomNavigationItem("Profile",Icons.Rounded.Person, Screens.Profile.route),
         )
     }
