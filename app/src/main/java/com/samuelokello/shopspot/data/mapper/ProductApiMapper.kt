@@ -1,11 +1,11 @@
 package com.samuelokello.shopspot.data.mapper
 
-import com.samuelokello.shopspot.data.local.ProductEntity
-import com.samuelokello.shopspot.data.network.ProductApiModel
+import com.samuelokello.shopspot.data.local.product.ProductEntity
+import com.samuelokello.shopspot.data.network.product.dto.ProductDto
 import com.samuelokello.shopspot.domain.Product
 
 class ProductApiMapper {
-    fun toEntity(apiModel: ProductApiModel): ProductEntity {
+    fun toEntity(apiModel: ProductDto): ProductEntity {
         return ProductEntity(
             id = apiModel.id,
             title = apiModel.title,
@@ -18,7 +18,7 @@ class ProductApiMapper {
         )
     }
 
-    fun toDomain(apiModel: ProductApiModel): Product{
+    fun toDomain(apiModel: ProductDto): Product{
         return Product(
             id = apiModel.id,
             title = apiModel.title,

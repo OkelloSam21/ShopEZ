@@ -1,4 +1,4 @@
-package com.samuelokello.shopspot.data.local
+package com.samuelokello.shopspot.data.local.product
 
 import androidx.room.Dao
 import androidx.room.Insert

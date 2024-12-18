@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.samuelokello.shopspot.data.local.product.ProductDao
+import com.samuelokello.shopspot.data.local.product.ProductEntity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -18,7 +20,7 @@ import kotlin.jvm.Throws
 @RunWith(AndroidJUnit4::class)
 class ProductDaoTest {
     private lateinit var productDao: ProductDao
-    private lateinit var shopSpotDatabase: SHopSpotDatabase
+    private lateinit var shopSpotDatabase: ShopSpotDatabase
 
     private var product1 = ProductEntity(1,"title1",3000.00,"some desc","category","img",4.0,344)
     private var product2 = ProductEntity(2,"title2",4500.00,"some desc","category","img",3.7,34)
@@ -26,7 +28,7 @@ class ProductDaoTest {
     @Before
     fun createDB() {
         val context: Context = ApplicationProvider.getApplicationContext()
-        shopSpotDatabase = Room.inMemoryDatabaseBuilder(context, SHopSpotDatabase::class.java)
+        shopSpotDatabase = Room.inMemoryDatabaseBuilder(context, ShopSpotDatabase::class.java)
             .allowMainThreadQueries()
             .build()
         productDao = shopSpotDatabase.productDao()
