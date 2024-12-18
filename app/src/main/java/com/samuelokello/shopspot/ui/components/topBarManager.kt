@@ -1,57 +1,48 @@
-package com.samuelokello.shopspot.ui.navigation
+package com.samuelokello.shopspot.ui.components
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddShoppingCart
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.samuelokello.shopspot.ui.components.TopBarConfig
-import com.samuelokello.shopspot.ui.components.TopBarType
+import com.samuelokello.shopspot.ui.navigation.Screens
 
 
 @Composable
-fun topBarManager(currentRoute: String?, navController: NavController): TopBarConfig {
+fun topBarManager(
+    currentRoute: String?,
+    navigateToCart: () -> Unit,
+): TopBarConfig {
     return when (currentRoute) {
         Screens.Home.route -> TopBarConfig(
             title = "ShopEZ",
             topBarType = TopBarType.CenterAligned,
             actions = {
-                IconButton(onClick = { navController.navigate(Screens.Checkout.route) }) {
+                IconButton(onClick = navigateToCart) {
                     Icon(Icons.Default.AddShoppingCart, contentDescription = "Cart")
                 }
             }
         )
+
         Screens.Checkout.route -> TopBarConfig(
-            title = "Checkout",
+            title = "Cart",
             topBarType = TopBarType.CenterAligned,
             showBackIcon = true
         )
+
         Screens.Profile.route -> TopBarConfig(
             title = "",
             topBarType = TopBarType.Regular,
         )
-        "${Screens.ProductDetailsScreen.route}/{productJson}" -> TopBarConfig(
+
+        "${Screens.ProductDetailsScreen.route}/{productId}" -> TopBarConfig(
             title = "",
             topBarType = TopBarType.CenterAligned,
             actions = {
                 IconButton(
-                    onClick = {
-
-                }, modifier = Modifier.padding( end= 10.dp)) {
-
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ){
-                        Icon(Icons.Default.FavoriteBorder, contentDescription = "Add to favourite")
-                    }
+                    onClick = navigateToCart
+                ) {
+                    Icon(Icons.Default.AddShoppingCart, contentDescription = "Add to favourite")
                 }
             },
             showBackIcon = true
@@ -66,6 +57,7 @@ fun topBarManager(currentRoute: String?, navController: NavController): TopBarCo
             topBarType = TopBarType.CenterAligned,
             showBackIcon = false
         )
+
         else -> TopBarConfig(
             title = "",
             topBarType = TopBarType.Regular

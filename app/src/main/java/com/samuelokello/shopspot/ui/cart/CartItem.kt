@@ -1,4 +1,4 @@
-package com.samuelokello.shopspot.ui.checkout
+package com.samuelokello.shopspot.ui.cart
 
 import com.samuelokello.shopspot.domain.Product
 
