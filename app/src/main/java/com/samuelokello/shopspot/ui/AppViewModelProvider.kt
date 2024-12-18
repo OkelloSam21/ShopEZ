@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.samuelokello.shopspot.ShopSpotApplication
+import com.samuelokello.shopspot.ui.cart.CartViewModel
 import com.samuelokello.shopspot.ui.home.HomeViewModel
 import com.samuelokello.shopspot.ui.productdetails.ProductDetailViewModel
 import com.samuelokello.shopspot.ui.search.SearchViewModel
@@ -24,6 +25,12 @@ object AppViewModelProvider {
         initializer {
             ProductDetailViewModel(
                 repository = shopSpotApplication().container.productRepository
+            )
+        }
+        initializer {
+            CartViewModel(
+                cartRepository = shopSpotApplication().container.cartRepository,
+                productRepository = shopSpotApplication().container.productRepository
             )
         }
     }
