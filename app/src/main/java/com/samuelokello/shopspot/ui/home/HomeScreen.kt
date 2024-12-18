@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.samuelokello.shopspot.R
 import com.samuelokello.shopspot.domain.Product
 import com.samuelokello.shopspot.ui.AppViewModelProvider
+import com.samuelokello.shopspot.ui.components.ErrorView
 
 /**
  * @Product Screen - Lists all available products
@@ -38,8 +38,14 @@ fun HomeScreen(
     val state by viewModel.homeUiState.collectAsState()
 
     when (state) {
-        HomeUiState.Error -> ErrorScreen()
-        HomeUiState.Loading -> LoadingScreen()
+
+        is HomeUiState.Error -> ErrorView(
+            message = (state as HomeUiState.Error).message,
+            onRetry = { viewModel.loadProducts()}
+        )
+
+        is HomeUiState.Loading -> LoadingScreen()
+
         is HomeUiState.Success ->
             ProductList(
                 products = (state as HomeUiState.Success).products,
@@ -56,24 +62,28 @@ fun ProductList(
     navigateToItemDetails: (productId: Int) -> Unit
 ) {
     Column {
+
       LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small)),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small)),
             modifier = modifier.padding()
         ) {
+
             items(products) { product ->
                 ProductItem(
                     product,
                     navigateToItemDetails = { navigateToItemDetails(product.id) }
                 )
             }
+
         }
     }
 }
 
 @Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
+
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center){
         Image(
             modifier = modifier.size(200.dp),
@@ -85,17 +95,4 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 
 }
 
-@Composable
-fun ErrorScreen(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_connection_error), contentDescription = ""
-        )
-        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
-    }
-}
 

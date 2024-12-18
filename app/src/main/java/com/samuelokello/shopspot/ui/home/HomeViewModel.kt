@@ -27,7 +27,7 @@ class HomeViewModel(private val repository: ProductRepository) : ViewModel() {
                     _homeUiState.value = HomeUiState.Loading
                 }
                 .catch {
-                    _homeUiState.value = HomeUiState.Error
+                    _homeUiState.value = HomeUiState.Error(message = it.message ?: " ")
                 }
                 .collect { products ->
                     _homeUiState.value = HomeUiState.Success(products)
@@ -42,6 +42,6 @@ class HomeViewModel(private val repository: ProductRepository) : ViewModel() {
 
 sealed interface HomeUiState {
     data object Loading : HomeUiState
-    data object Error : HomeUiState
+    data class Error(val message: String) : HomeUiState
     data class Success(val products:List<Product>) :HomeUiState
 }
