@@ -33,15 +33,13 @@ class CartRepositoryImpl (
 
     override suspend fun getUserCarts(userId: Int): Flow<Result<List<UserCart>>> = flow {
         try {
-            // First emit cached data
+
             val cachedCarts = dao.getCartsByUserId(userId).map { it.toDomain() }
             emit(Result.success(cachedCarts))
 
-            // Then fetch fresh data from API
             val apiResponse = api.getUserCarts(userId)
             val carts = apiResponse.map { it.toDomain() }
 
-            // Update cache
             dao.clearAndInsertCarts(carts.map { it.toEntity() })
 
             emit(Result.success(carts))

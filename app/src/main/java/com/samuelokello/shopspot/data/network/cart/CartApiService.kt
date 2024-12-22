@@ -1,7 +1,9 @@
 package com.samuelokello.shopspot.data.network.cart
 
-import com.google.gson.annotations.SerializedName
+import com.samuelokello.shopspot.data.network.cart.dto.CartProductDto
 import com.samuelokello.shopspot.data.network.cart.dto.UserCartResponseDto
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -36,35 +38,22 @@ interface CartApiService {
 }
 
 // Request DTOs
+@Serializable
 data class AddCartRequestDto(
+    @SerialName("userId")
     val userId: Int,
+    @SerialName("date")
     val date: String,
-    val products: List<com.samuelokello.shopspot.data.network.cart.dto.CartProductDto>
+    @SerialName("products")
+    val products: List<CartProductDto>
 )
 
+@Serializable
 data class UpdateCartRequestDto(
+    @SerialName("userId")
     val userId: Int,
+    @SerialName("date")
     val date: String,
-    val products: List<com.samuelokello.shopspot.data.network.cart.dto.CartProductDto>
-)
-
-data class CartProductDto(
-    @SerializedName("productId")
-    val productId: Int,
-    @SerializedName("quantity")
-    val quantity: Int
-)
-
-// Response DTOs (you already have these)
-data class UserCartResponseDto(
-    @SerializedName("date")
-    val date: String,
-    @SerializedName("id")
-    val id: Int,
-    @SerializedName("products")
-    val cartProductDto: List<CartProductDto>,
-    @SerializedName("userId")
-    val userId: Int,
-    @SerializedName("__v")
-    val v: Int
+    @SerialName("products")
+    val products: List<CartProductDto>
 )

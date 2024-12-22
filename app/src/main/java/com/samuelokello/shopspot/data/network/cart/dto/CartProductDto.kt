@@ -1,10 +1,12 @@
 package com.samuelokello.shopspot.data.network.cart.dto
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CartProductDto(
-    @SerializedName("productId")
+    @SerialName("productId")
     val productId: Int,
-    @SerializedName("quantity")
-    val quantity: Int
+    @SerialName("quantity")
+    val quantity: Int,
 )
