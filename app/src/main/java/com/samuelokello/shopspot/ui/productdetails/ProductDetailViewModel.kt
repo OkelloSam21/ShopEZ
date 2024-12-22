@@ -1,5 +1,6 @@
 package com.samuelokello.shopspot.ui.productdetails
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.shopspot.data.repository.ProductRepository
@@ -39,10 +40,24 @@ class ProductDetailViewModel(
                     userId = 1,
                     productId = product.id,
                     quantity = 1
-
+                ).collect { result ->
+                    result.fold(
+                        onSuccess = { cart ->
+                            // Handle successful cart addition
+                            // You might want to show a success message or update UI
+                            Log.e("ProductViewmode", "item aded succesfully")
+                        },
+                        onFailure = { exception ->
+                            _state.value = ProductDetailUiState.Error(
+                                message = exception.message ?: "Failed to add item to cart"
+                            )
+                        }
+                    )
+                }
+            } catch (e: Exception) {
+                _state.value = ProductDetailUiState.Error(
+                    message = e.message ?: "An error occurred"
                 )
-            }catch (e: Exception){
-
             }
         }
     }

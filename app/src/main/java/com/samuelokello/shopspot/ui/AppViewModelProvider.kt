@@ -24,7 +24,8 @@ object AppViewModelProvider {
         }
         initializer {
             ProductDetailViewModel(
-                repository = shopSpotApplication().container.productRepository
+                repository = shopSpotApplication().container.productRepository,
+                cartRepository = shopSpotApplication().container.cartRepository
             )
         }
         initializer {
@@ -37,7 +38,7 @@ object AppViewModelProvider {
 }
 
 /**
- * Extension function to queries for [Application] object and returns an instance of
+ * Extension function to queries for Application object and returns an instance of
  *  [ShopSpotApplication].
  */
 fun CreationExtras.shopSpotApplication(): ShopSpotApplication =
