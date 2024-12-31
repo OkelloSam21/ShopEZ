@@ -11,5 +11,5 @@ data class UserCartEntity(
     @TypeConverters(CartProductConverter::class)
     val products: List<CartProductEntity>,
     val userId: Int,
-    val v: Int
+    val v: Int? = null
 )

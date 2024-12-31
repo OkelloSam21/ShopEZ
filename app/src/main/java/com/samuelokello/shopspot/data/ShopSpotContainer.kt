@@ -1,18 +1,27 @@
 package com.samuelokello.shopspot.data
 
 import android.content.Context
+import androidx.annotation.UiThread
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.samuelokello.shopspot.data.local.product.ProductDao
 import com.samuelokello.shopspot.data.local.ShopSpotDatabase
+import com.samuelokello.shopspot.data.local.auth.AuthPreferences
+import com.samuelokello.shopspot.data.local.auth.Constants.AUTH_PREFERENCES
 import com.samuelokello.shopspot.data.local.cart.UserCartDao
 import com.samuelokello.shopspot.data.mapper.ProductApiMapper
 import com.samuelokello.shopspot.data.mapper.ProductEntityMapper
+import com.samuelokello.shopspot.data.network.auth.AuthApiService
 import com.samuelokello.shopspot.data.network.cart.CartApiService
 import com.samuelokello.shopspot.data.network.product.ProductApiService
 import com.samuelokello.shopspot.data.repository.ProductRepository
 import com.samuelokello.shopspot.data.repository.ProductRepositoryImpl
 import com.samuelokello.shopspot.data.repository.CartRepository
 import com.samuelokello.shopspot.data.repository.CartRepositoryImpl
+import com.samuelokello.shopspot.data.repository.LoginRepositoryImpl
+import com.samuelokello.shopspot.domain.repository.LoginRepository
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
@@ -20,15 +29,24 @@ import retrofit2.Retrofit
 interface ShopSpotContainer {
     val productRepository: ProductRepository
     val cartRepository: CartRepository
+    val loginRepository: LoginRepository
 }
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = AUTH_PREFERENCES)
 
 class DefaultAppContainer(private val context: Context) : ShopSpotContainer {
     private val baseUrl = "https://fakestoreapi.com/"
 
+    private val json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+        isLenient = true
+    }
+
     // Network
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .baseUrl(baseUrl)
             .build()
     }
@@ -40,6 +58,10 @@ class DefaultAppContainer(private val context: Context) : ShopSpotContainer {
 
     private val cartApiService: CartApiService by lazy {
         retrofit.create(CartApiService::class.java)
+    }
+
+    private val authApiService: AuthApiService by lazy {
+        retrofit.create(AuthApiService::class.java)
     }
 
     // Database
@@ -54,6 +76,10 @@ class DefaultAppContainer(private val context: Context) : ShopSpotContainer {
 
     private val cartDao: UserCartDao by lazy {
         database.cartDao()
+    }
+
+    private val authPreferences: AuthPreferences by lazy {
+        AuthPreferences(context.dataStore)
     }
 
     // Mappers
@@ -79,6 +105,13 @@ class DefaultAppContainer(private val context: Context) : ShopSpotContainer {
         CartRepositoryImpl(
             api = cartApiService,
             dao = cartDao
+        )
+    }
+
+    override val loginRepository: LoginRepository by lazy {
+        LoginRepositoryImpl(
+            authPreferences = authPreferences,
+            authApiService = authApiService
         )
     }
 

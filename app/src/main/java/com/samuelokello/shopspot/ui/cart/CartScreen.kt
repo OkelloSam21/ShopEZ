@@ -67,12 +67,14 @@ fun CartScreen(
                     CircularProgressIndicator()
                 }
             }
+
             is CartUiState.Error -> {
                 ErrorView(
-                    message = ( uiState as CartUiState.Error).message,
-                    onRetry = { viewModel.refreshCart()}
+                    message = (uiState as CartUiState.Error).message,
+                    onRetry = { viewModel.refreshCart() }
                 )
             }
+
             is CartUiState.Success -> {
                 if (cartItems.isEmpty()) {
                     EmptyCartView(navigateToHome)
@@ -112,30 +114,64 @@ fun CartContent(
                     onDecreaseQuantity = { onUpdateQuantity(item.product.id, false) },
                     onRemove = { onRemoveItem(item.product.id) }
                 )
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
             }
         }
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Total:",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(
-                text = "₹${String.format(Locale.getDefault(),"%.2f", totalPrice)}",
-                style = MaterialTheme.typography.titleLarge
-            )
+        Column {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "${cartItems.size} Items :",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Text(
+                    text = "${String.format(Locale.getDefault(), "%.2f", totalPrice)}0",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Shipping fee :",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Text(
+                    text = " 60.00",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Total :",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Text(
+                    text = "₹${String.format(Locale.getDefault(), "%.2f", totalPrice + 60)}",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
         }
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = onCheckout,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .height(60.dp)
+                .fillMaxWidth(),
+//                .padding(vertical = 16.dp),
+            shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary
             )
@@ -152,79 +188,79 @@ fun CartItemCard(
     onDecreaseQuantity: () -> Unit,
     onRemove: () -> Unit,
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+//    Card(
+//        modifier = Modifier.fillMaxWidth(),
+//        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+//    ) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+        AsyncImage(
+            model = item.product.image,
+            contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
-                model = item.product.image,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
+                .size(100.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = item.product.title,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = "₹${item.product.price}",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.primary
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = item.product.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = "₹${item.product.price}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 8.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                IconButton(
+                    onClick = onDecreaseQuantity,
+                    modifier = Modifier.size(24.dp)
                 ) {
-                    IconButton(
-                        onClick = onDecreaseQuantity,
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(Icons.Default.Remove, "Decrease")
-                    }
+                    Icon(Icons.Default.Remove, "Decrease")
+                }
 
-                    Text(
-                        text = "${item.quantity}",
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                Text(
+                    text = "${item.quantity}",
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                IconButton(
+                    onClick = onIncreaseQuantity,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(Icons.Default.Add, "Increase")
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                IconButton(
+                    onClick = onRemove,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = "Remove",
+                        tint = MaterialTheme.colorScheme.error
                     )
-
-                    IconButton(
-                        onClick = onIncreaseQuantity,
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(Icons.Default.Add, "Increase")
-                    }
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    IconButton(
-                        onClick = onRemove,
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Delete,
-                            contentDescription = "Remove",
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                    }
                 }
             }
         }
     }
+//    }
 }
 
 @Composable

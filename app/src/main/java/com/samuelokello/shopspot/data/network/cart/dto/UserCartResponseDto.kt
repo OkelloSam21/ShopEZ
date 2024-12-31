@@ -1,16 +1,18 @@
 package com.samuelokello.shopspot.data.network.cart.dto
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserCartResponseDto(
-    @SerializedName("date")
+    @SerialName("date")
     val date: String,
-    @SerializedName("id")
+    @SerialName("id")
     val id: Int,
-    @SerializedName("products")
+    @SerialName("products")
     val cartProductDto: List<CartProductDto>,
-    @SerializedName("userId")
+    @SerialName("userId")
     val userId: Int,
-    @SerializedName("__v")
-    val v: Int
+    @SerialName("__v")
+    val v: Int? = null
 )

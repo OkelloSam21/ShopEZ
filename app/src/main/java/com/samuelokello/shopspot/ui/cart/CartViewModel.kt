@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.samuelokello.shopspot.data.repository.ProductRepository
 import com.samuelokello.shopspot.data.repository.CartRepository
 import com.samuelokello.shopspot.domain.UserCart
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +30,7 @@ class CartViewModel(
     }
 
     private fun fetchCartItems() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = CartUiState.Loading
             cartRepository.getUserCarts(USER_ID) // Replace USER_ID with actual user ID
                 .collect { result ->
@@ -52,21 +53,24 @@ class CartViewModel(
     }
 
     private fun loadCartWithProducts(cart: UserCart) {
-        try {
-            val cartItems = cart.products.map { cartProduct ->
-                val product = productRepository.getProductById(cartProduct.productId)
-                CartItem(product, cartProduct.quantity)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val cartItems = cart.products.map { cartProduct ->
+                    val product = productRepository.getProductById(cartProduct.productId)
+                    CartItem(product, cartProduct.quantity)
+                }
+                _cartItems.value = cartItems
+                calculateTotal()
+                _uiState.value = CartUiState.Success(cartItems)
+            } catch (e: Exception) {
+                _uiState.value = CartUiState.Error("Failed to load product details: ${e.message}")
             }
-            _cartItems.value = cartItems
-            calculateTotal()
-            _uiState.value = CartUiState.Success(cartItems)
-        } catch (e: Exception) {
-            _uiState.value = CartUiState.Error("Failed to load product details: ${e.message}")
         }
+
     }
 
     fun updateQuantity(productId: Int, increase: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val item = _cartItems.value.find { it.product.id == productId } ?: return@launch
             val newQuantity = if (increase) item.quantity + 1 else (item.quantity - 1).coerceAtLeast(1)
 
@@ -86,7 +90,7 @@ class CartViewModel(
     }
 
     fun removeItem(productId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             cartRepository.removeItemFromCart(USER_ID, productId)
                 .collect { result ->
                     result.fold(
@@ -107,7 +111,7 @@ class CartViewModel(
     }
 
     fun refreshCart() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             cartRepository.refreshCarts(USER_ID)
                 .collect { result ->
                     result.fold(
@@ -119,22 +123,6 @@ class CartViewModel(
                         },
                         onFailure = { exception ->
                             _uiState.value = CartUiState.Error("Failed to refresh cart: ${exception.message}")
-                        }
-                    )
-                }
-        }
-    }
-
-    fun addToCart(productId: Int, quantity: Int = 1) {
-        viewModelScope.launch {
-            cartRepository.addItemToCart(USER_ID, productId, quantity)
-                .collect { result ->
-                    result.fold(
-                        onSuccess = { updatedCart ->
-                            loadCartWithProducts(updatedCart)
-                        },
-                        onFailure = { exception ->
-                            _uiState.value = CartUiState.Error("Failed to add item to cart: ${exception.message}")
                         }
                     )
                 }

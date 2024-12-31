@@ -1,5 +1,6 @@
 package com.samuelokello.shopspot.ui.navigation
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,6 +27,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.samuelokello.shopspot.ui.AppViewModelProvider
+import com.samuelokello.shopspot.ui.auth.auth_dashboard.AuthDashboardScreen
+import com.samuelokello.shopspot.ui.auth.forgot_password.ForgotPasswordScreen
+import com.samuelokello.shopspot.ui.auth.login.LoginScreen
+import com.samuelokello.shopspot.ui.auth.register.RegisterScreen
 import com.samuelokello.shopspot.ui.cart.CartScreen
 import com.samuelokello.shopspot.ui.components.ShopSpotTopAppBar
 import com.samuelokello.shopspot.ui.components.topBarManager
@@ -38,7 +44,8 @@ import com.samuelokello.shopspot.ui.profile.ProfileScreen
 import com.samuelokello.shopspot.ui.search.SearchScreen
 
 @Composable
-fun ShopSpotAppNavHost() {
+fun ShopSpotAppNavHost(navigationViewModel: NavigationViewModel = viewModel()) {
+
     val viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val navController = rememberNavController()
     val currentBackStack by navController.currentBackStackEntryAsState()
@@ -46,16 +53,17 @@ fun ShopSpotAppNavHost() {
 
     val topBarConfig = topBarManager(
         currentRoute.toString(),
-        navigateToCart = { navController.navigate(Screens.Checkout.route)},
+        navigateToCart = { navController.navigate(Screens.Cart.route) },
     )
 
-
-    // Track scroll state for bottom nav visibility
     var bottomBarVisible by remember { mutableStateOf(true) }
     val bottomBarHeight = 80.dp
-    val bottomBarHeightPx = with(LocalDensity.current) { bottomBarHeight.toPx() }
+    with(LocalDensity.current) { bottomBarHeight.toPx() }
 
-    // Create nested scroll connection
+    val activity = LocalContext.current as ComponentActivity
+    val context = LocalContext.current
+
+
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -114,20 +122,44 @@ fun ShopSpotAppNavHost() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screens.Home.route,
+            startDestination = Screens.AuthDashBoard.route,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(Screens.AuthDashBoard.route) {
+                AuthDashboardScreen(
+                    navigateToLogin = { navController.navigate(Screens.Login.route) },
+                    navigateToRegister = { navController.navigate(Screens.Register.route) }
+                )
+            }
+            composable(Screens.Register.route) {
+                RegisterScreen(
+                    navigateToLogin = { navController.navigate(Screens.Login.route) }
+                )
+            }
+            composable(Screens.Login.route) {
+                LoginScreen(
+                    navigateToRegister = { navController.navigate(Screens.Register.route) },
+                    navigateToHome = { navController.navigate(Screens.Home.route)},
+                    navigateToForgotPassword =  { navController.navigate(Screens.ForgotPassword.route) },
+                )
+            }
+            composable(Screens.ForgotPassword.route) {
+                ForgotPasswordScreen(modifier = Modifier)
+            }
             composable(Screens.Home.route) {
                 HomeScreen(
                     navigateToItemDetails = { productId ->
                         navController.navigate("${Screens.ProductDetailsScreen.route}/$productId")
+                    },
+                    onBackPressed = {
+                        navigationViewModel.onBackPressed(context = context, activity = activity )
                     }
                 )
             }
-            composable(Screens.Checkout.route) {
+            composable(Screens.Cart.route) {
                 CartScreen(
-                    navigateToCheckout = { navController.navigate(Screens.OrderPlaced.route)},
-                    navigateToHome = {navController.navigate(Screens.Home.route) }
+                    navigateToCheckout = { navController.navigate(Screens.OrderPlaced.route) },
+                    navigateToHome = { navController.navigate(Screens.Home.route) }
                 )
             }
             composable(Screens.Search.route) {
