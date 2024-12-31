@@ -2,4 +2,6 @@
     <string name="app_name">ShopSpot</string>
     <string name="loading_failed">Loading failed</string>
     <string name="loading">loading</string>
+    <string name="please_enter_an_email_address_that_you_had_registered_with_so_that_we_can_send_you_a_password_reset_link">Please enter an email address that you had registered with, so that we can send you a password reset link</string>
+    <string name="no_password_request_link">This API does not provide an endpoint for sending password reset link, just login with the credentials provided in the README file</string>
 </resources>
