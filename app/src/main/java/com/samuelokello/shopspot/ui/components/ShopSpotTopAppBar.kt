@@ -13,7 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import com.samuelokello.shopspot.util.TopBarConfig
+import com.samuelokello.shopspot.util.TopBarType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
