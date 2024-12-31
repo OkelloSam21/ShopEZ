@@ -1,4 +1,4 @@
-package com.samuelokello.shopspot.ui.components
+package com.samuelokello.shopspot.util
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable

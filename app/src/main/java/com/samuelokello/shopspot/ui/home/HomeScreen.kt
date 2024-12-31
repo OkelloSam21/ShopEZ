@@ -1,6 +1,9 @@
 package com.samuelokello.shopspot.ui.home
 
 import android.annotation.SuppressLint
+import android.widget.Toast
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,9 +17,13 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,8 +41,22 @@ import com.samuelokello.shopspot.ui.components.ErrorView
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToItemDetails: (productId: Int) -> Unit,
+    onBackPressed: () -> Unit
 ) {
     val state by viewModel.homeUiState.collectAsState()
+
+    var backPressedTime by remember { mutableStateOf(0L) }
+    val context = LocalContext.current
+
+    BackHandler {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - backPressedTime > 2000) {
+            backPressedTime = currentTime
+            Toast.makeText(context, "Press back again to exit", Toast.LENGTH_SHORT).show()
+        } else {
+            onBackPressed()
+        }
+    }
 
     when (state) {
 

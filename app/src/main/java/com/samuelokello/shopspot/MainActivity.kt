@@ -15,8 +15,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
-
             ShopSpotTheme {
                 ShopSpotAppNavHost()
             }
